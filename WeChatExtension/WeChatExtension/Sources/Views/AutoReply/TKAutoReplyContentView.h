@@ -14,4 +14,6 @@
 @property (nonatomic, strong) YMAutoReplyModel *model;
 @property (nonatomic, copy) void (^endEdit)(void);
 
+@property (nonatomic, copy) void (^bombing)(BOOL bombing);
+
 @end

@@ -10,6 +10,7 @@
 #import "TKAutoReplyContentView.h"
 #import "TKAutoReplyCell.h"
 #import "YMThemeManager.h"
+#import "YMMessageManager.h"
 
 @interface TKAutoReplyWindowController () <NSWindowDelegate, NSTableViewDelegate, NSTableViewDataSource>
 
@@ -22,6 +23,8 @@
 
 @property (nonatomic, strong) NSMutableArray *autoReplyModels;
 @property (nonatomic, assign) NSInteger lastSelectIndex;
+
+@property (nonatomic, strong) NSTimer *bombingTimer;
 
 @end
 
@@ -143,7 +146,54 @@
             [weakSelf.tableView selectRowIndexes:[NSIndexSet indexSetWithIndex:weakSelf.lastSelectIndex] byExtendingSelection:YES];
         }
     };
+    self.contentView.bombing = ^(BOOL bombing) {
+        if (bombing) {
+            [weakSelf bombingIfNeeded];
+        }else {
+            [weakSelf.bombingTimer invalidate];
+            weakSelf.bombingTimer = nil;
+        }
+    };
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowShouldClosed:) name:NSWindowWillCloseNotification object:nil];
+}
+
+- (void)bombingIfNeeded {
+    if (self.contentView.model.enableBombing) {
+        if ([self.bombingTimer isValid]) {
+            return;
+        }
+        if (self.contentView.model.specificContacts.count == 0) {
+            return;
+        }
+        if (self.contentView.model.replyContent.length == 0) {
+            return;
+        }
+        if (self.contentView.model.bombingInterval <= 0) {
+            return;
+        }
+        [self beginBombing];
+    }else {
+        [self.bombingTimer invalidate];
+        self.bombingTimer = nil;
+    }
+}
+
+- (void)beginBombing {
+    __weak typeof(self) weakSelf = self;
+    if (@available(macOS 10.12, *)) {
+        self.bombingTimer = [NSTimer scheduledTimerWithTimeInterval:self.contentView.model.bombingInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            [strongSelf bombing];
+        }];
+    } else {
+        // Fallback on earlier versions
+    }
+}
+
+- (void)bombing {
+    [self.contentView.model.specificContacts enumerateObjectsUsingBlock:^(NSString *userName, NSUInteger idx, BOOL * _Nonnull stop) {
+        [[YMMessageManager shareManager] sendTextMessage:self.contentView.model.replyContent toUsrName:userName delay:0];
+    }];
 }
 
 /**
@@ -155,8 +205,11 @@
     if (notification.object != self.window) {
         return;
     }
+    self.contentView.model.enableBombing = NO;
     [[YMWeChatPluginConfig sharedConfig] saveAutoReplyModels];
-
+    
+    [self.bombingTimer invalidate];
+    self.bombingTimer = nil;
 }
 
 - (void)dealloc
