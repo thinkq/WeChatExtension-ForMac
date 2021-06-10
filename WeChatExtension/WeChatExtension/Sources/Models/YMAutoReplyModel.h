@@ -20,6 +20,9 @@
 @property (nonatomic, assign) NSInteger delayTime;          /**<    延迟时间            */
 @property (nonatomic, assign) BOOL enableSpecificReply;     /**<    是否开启特定回复     */
 @property (nonatomic, strong) NSArray *specificContacts;    /**<    特定回复的联系人     */
+@property (nonatomic, assign) BOOL enableBombing;           /**<    是否开启消息轰炸     */
+@property (nonatomic, assign) NSTimeInterval bombingInterval;     /**<    时间间隔
+      */
 - (BOOL)hasEmptyKeywordOrReplyContent;
 
 @end

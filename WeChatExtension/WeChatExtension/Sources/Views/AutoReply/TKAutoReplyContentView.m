@@ -23,7 +23,8 @@
 @property (nonatomic, strong) NSButton *enableDelayBtn;
 @property (nonatomic, strong) NSButton *enableSpecificReplyBtn;
 @property (nonatomic, strong) NSButton *selectSessionButton;
-
+@property (nonatomic, strong) NSTextField *bombingIntervalField;
+@property (nonatomic, strong) NSButton *enableBombingBtn;
 @end
 
 @implementation TKAutoReplyContentView
@@ -46,6 +47,27 @@
         btn.frame = NSMakeRect(20, 30, 400, 20);
         [YMThemeManager changeButtonTheme:btn];
         btn;
+    });
+    
+    self.enableBombingBtn = ({
+        NSButton *btn = [NSButton tk_checkboxWithTitle:YMLocalizedString(@"assistant.autoReply.bombingInterval") target:self action:@selector(clickEnableBombingBtn:)];
+        btn.frame = NSMakeRect(200, 30, 85, 20);
+        [YMThemeManager changeButtonTheme:btn];
+        btn;
+    });
+    
+    self.bombingIntervalField = ({
+        NSTextField *textField = [[NSTextField alloc] init];
+        textField.frame = NSMakeRect(CGRectGetMaxX(self.enableBombingBtn.frame), 30, 60, 20);
+        textField.delegate = self;
+        textField.alignment = NSTextAlignmentRight;
+//        NSNumberFormatter * formater = [[NSNumberFormatter alloc] init];
+//        formater.numberStyle = NSNumberFormatterNoStyle;
+//        formater.minimum = @(0);
+//        formater.maximum = @(999);
+//        textField.cell.formatter = formater;
+        
+        textField;
     });
 
     
@@ -144,7 +166,9 @@
                         self.delayField,
                         self.enableDelayBtn,
                         self.enableSpecificReplyBtn,
-                        self.selectSessionButton]];
+                        self.selectSessionButton,
+                        self.enableBombingBtn,
+                        self.bombingIntervalField]];
 }
 
 - (void)clickEnableSpecificReplyBtn:(NSButton *)btn
@@ -197,7 +221,16 @@
 
 - (void)clickEnableDelayBtn:(NSButton *)btn
 {
+    self.enableBombingBtn.hidden = btn.state;
+    self.bombingIntervalField.hidden = btn.state;
     self.model.enableDelay = btn.state;
+}
+
+- (void)clickEnableBombingBtn:(NSButton *)btn
+{
+    self.enableDelayBtn.hidden = btn.state;
+    self.delayField.hidden = btn.state;
+    self.model.enableBombing = btn.state;
 }
 
 - (void)viewDidMoveToSuperview
@@ -222,6 +255,12 @@
     self.enableDelayBtn.state = model.enableDelay;
     self.delayField.stringValue = [NSString stringWithFormat:@"%ld",model.delayTime];
     self.enableSpecificReplyBtn.state = model.enableSpecificReply;
+    
+    self.bombingIntervalField.stringValue = [NSString stringWithFormat:@"%f",model.bombingInterval];
+    self.enableBombingBtn.state = model.enableBombing;
+    
+    self.enableDelayBtn.hidden = model.enableBombing;
+    self.delayField.hidden = model.enableBombing;
     
     self.selectSessionButton.hidden = !model.enableSpecificReply;
     self.enableGroupReplyBtn.hidden = model.enableSpecificReply;
@@ -278,6 +317,8 @@
         self.model.replyContent = self.autoReplyContentField.stringValue;
     } else if (control == self.delayField) {
         self.model.delayTime = [self.delayField.stringValue integerValue];
+    }else if (control == self.bombingIntervalField) {
+        self.model.bombingInterval = [self.bombingIntervalField.stringValue doubleValue];
     }
 }
 

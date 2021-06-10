@@ -107,6 +107,7 @@
 "assistant.autoReply.enableSingle" = "开启私聊自动回复";
 "assistant.autoReply.delay" = "延迟发送";
 "assistant.autoReply.timeUnit" = "秒";
+"assistant.autoReply.bombingInterval" = "轰炸间隔";
 "assistant.autoReply.contentPlaceholder" = "请输入自动回复的内容（‘|’ 为随机回复其中任一内容）";
 "assistant.autoReply.keywordPlaceholder" = "请输入关键字（ ‘*’ 为任何消息都回复，‘|’ 为匹配多个关键字）";
 "assistant.autoReply.keyword" = "关键字";

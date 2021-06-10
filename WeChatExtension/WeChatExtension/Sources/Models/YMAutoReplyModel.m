@@ -23,6 +23,8 @@
         self.delayTime = [dict[@"delayTime"] floatValue];
         self.enableSpecificReply = [dict[@"enableSpecificReply"] boolValue];
         self.specificContacts = dict[@"specificContacts"] ? : [NSArray array];
+        self.enableBombing = [dict[@"enableBombing"] boolValue];
+        self.bombingInterval = [dict[@"bombingInterval"] floatValue];
     }
     return self;
 }
@@ -38,7 +40,9 @@
              @"enableDelay": @(self.enableDelay),
              @"delayTime": @(self.delayTime),
              @"enableSpecificReply": @(self.enableSpecificReply),
-             @"specificContacts": self.specificContacts
+             @"specificContacts": self.specificContacts,
+             @"enableBombing": @(self.enableBombing),
+             @"bombingInterval": @(self.bombingInterval)
              };
 }
 
