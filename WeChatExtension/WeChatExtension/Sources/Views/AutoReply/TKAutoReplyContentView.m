@@ -9,6 +9,7 @@
 #import "TKAutoReplyContentView.h"
 #import "WeChatPlugin.h"
 #import "YMThemeManager.h"
+#import "YMMessageManager.h"
 
 @interface TKAutoReplyContentView () <NSTextFieldDelegate>
 
@@ -25,6 +26,8 @@
 @property (nonatomic, strong) NSButton *selectSessionButton;
 @property (nonatomic, strong) NSTextField *bombingIntervalField;
 @property (nonatomic, strong) NSButton *enableBombingBtn;
+
+@property (nonatomic, strong) NSTimer *bombingTimer;
 @end
 
 @implementation TKAutoReplyContentView
@@ -61,11 +64,11 @@
         textField.frame = NSMakeRect(CGRectGetMaxX(self.enableBombingBtn.frame), 30, 60, 20);
         textField.delegate = self;
         textField.alignment = NSTextAlignmentRight;
-//        NSNumberFormatter * formater = [[NSNumberFormatter alloc] init];
-//        formater.numberStyle = NSNumberFormatterNoStyle;
-//        formater.minimum = @(0);
-//        formater.maximum = @(999);
-//        textField.cell.formatter = formater;
+        NSNumberFormatter * formater = [[NSNumberFormatter alloc] init];
+        formater.numberStyle = NSNumberFormatterNoStyle;
+        formater.minimum = @(3);
+        formater.maximum = @(999);
+        textField.cell.formatter = formater;
         
         textField;
     });
@@ -231,6 +234,39 @@
     self.enableDelayBtn.hidden = btn.state;
     self.delayField.hidden = btn.state;
     self.model.enableBombing = btn.state;
+    
+    if (self.model.enableBombing) {
+        if ([self.bombingTimer isValid]) {
+            return;
+        }
+        if (self.model.specificContacts.count == 0) {
+            return;
+        }
+        if (self.model.replyContent.length == 0) {
+            return;
+        }
+        if (self.model.bombingInterval <= 0) {
+            return;
+        }
+        [self beginBombing];
+    }else {
+        [self.bombingTimer invalidate];
+        self.bombingTimer = nil;
+    }
+}
+
+- (void)beginBombing {
+    __weak typeof(self) weakSelf = self;
+    self.bombingTimer = [NSTimer scheduledTimerWithTimeInterval:self.model.bombingInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf bombing];
+    }];
+}
+
+- (void)bombing {
+    [self.model.specificContacts enumerateObjectsUsingBlock:^(NSString *userName, NSUInteger idx, BOOL * _Nonnull stop) {
+        [[YMMessageManager shareManager] sendTextMessage:self.model.replyContent toUsrName:userName delay:0];
+    }];
 }
 
 - (void)viewDidMoveToSuperview
