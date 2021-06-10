@@ -77,7 +77,7 @@
     
     self.contentView = ({
         TKAutoReplyContentView *contentView = [[TKAutoReplyContentView alloc] init];
-        contentView.frame = NSMakeRect(250, 50, 400, 375);
+        contentView.frame = NSMakeRect(250, 20, 400, 405);
         contentView.hidden = YES;
         
         contentView;

@@ -43,7 +43,7 @@
     
     self.enableSpecificReplyBtn = ({
         NSButton *btn = [NSButton tk_checkboxWithTitle:YMLocalizedString(@"assistant.autoReply.enableSpecific") target:self action:@selector(clickEnableSpecificReplyBtn:)];
-        btn.frame = NSMakeRect(20, 0, 400, 20);
+        btn.frame = NSMakeRect(20, 30, 400, 20);
         [YMThemeManager changeButtonTheme:btn];
         btn;
     });
@@ -51,7 +51,7 @@
     
     self.selectSessionButton = ({
         NSButton *btn = [NSButton tk_buttonWithTitle:YMLocalizedString(@"assistant.autoReply.selectSpecific") target:self action:@selector(clickSelectSessionButton:)];
-        btn.frame = NSMakeRect(200, 0, 150, 20);
+        btn.frame = NSMakeRect(20, 0, 150, 20);
         btn.bezelStyle = NSBezelStyleTexturedRounded;
 
         btn;
@@ -59,35 +59,35 @@
 
     self.enableRegexBtn = ({
         NSButton *btn = [NSButton tk_checkboxWithTitle:YMLocalizedString(@"assistant.autoReply.enableRegEx") target:self action:@selector(clickEnableRegexBtn:)];
-        btn.frame = NSMakeRect(20, 25, 400, 20);
+        btn.frame = NSMakeRect(20, 55, 400, 20);
         [YMThemeManager changeButtonTheme:btn];
         btn;
     });
     
     self.enableGroupReplyBtn = ({
         NSButton *btn = [NSButton tk_checkboxWithTitle:YMLocalizedString(@"assistant.autoReply.enableGroup") target:self action:@selector(clickEnableGroupBtn:)];
-        btn.frame = NSMakeRect(20, 50, 400, 20);
+        btn.frame = NSMakeRect(20, 80, 400, 20);
         [YMThemeManager changeButtonTheme:btn];
         btn;
     });
     
     self.enableSingleReplyBtn = ({
         NSButton *btn = [NSButton tk_checkboxWithTitle:YMLocalizedString(@"assistant.autoReply.enableSingle") target:self action:@selector(clickEnableSingleBtn:)];
-        btn.frame = NSMakeRect(200, 50, 400, 20);
+        btn.frame = NSMakeRect(200, 80, 400, 20);
         [YMThemeManager changeButtonTheme:btn];
         btn;
     });
     
     self.enableDelayBtn = ({
         NSButton *btn = [NSButton tk_checkboxWithTitle:YMLocalizedString(@"assistant.autoReply.delay") target:self action:@selector(clickEnableDelayBtn:)];
-        btn.frame = NSMakeRect(200, 25, 85, 20);
+        btn.frame = NSMakeRect(200, 55, 85, 20);
         [YMThemeManager changeButtonTheme:btn];
         btn;
     });
     
     self.delayField = ({
         NSTextField *textField = [[NSTextField alloc] init];
-        textField.frame = NSMakeRect(CGRectGetMaxX(self.enableDelayBtn.frame), 25, 60, 20);
+        textField.frame = NSMakeRect(CGRectGetMaxX(self.enableDelayBtn.frame), 55, 60, 20);
         textField.placeholderString = YMLocalizedString(@"assistant.autoReply.timeUnit");
         textField.delegate = self;
         textField.alignment = NSTextAlignmentRight;
@@ -102,7 +102,7 @@
 
     self.autoReplyContentField = ({
         NSTextField *textField = [[NSTextField alloc] init];
-        textField.frame = NSMakeRect(20, 80, 350, 175);
+        textField.frame = NSMakeRect(20, 110, 350, 175);
         textField.placeholderString = YMLocalizedString(@"assistant.autoReply.contentPlaceholder");
         textField.delegate = self;
         
@@ -112,14 +112,14 @@
     self.autoReplyLabel = ({
         NSString *text = [NSString stringWithFormat:@"%@: ",YMLocalizedString(@"assistant.autoReply.content")];
         NSTextField *label = [NSTextField tk_labelWithString:text];
-        label.frame = NSMakeRect(20, 260, 350, 20);
+        label.frame = NSMakeRect(20, 290, 350, 20);
         
         label;
     });
     
     self.keywordTextField = ({
         NSTextField *textField = [[NSTextField alloc] init];
-        textField.frame = NSMakeRect(20, 300, 350, 50);
+        textField.frame = NSMakeRect(20, 330, 350, 50);
         textField.placeholderString = YMLocalizedString(@"assistant.autoReply.keywordPlaceholder");
         textField.delegate = self;
         
@@ -129,7 +129,7 @@
     self.keywordLabel = ({
          NSString *text = [NSString stringWithFormat:@"%@: ",YMLocalizedString(@"assistant.autoReply.keyword")];
         NSTextField *label = [NSTextField tk_labelWithString:text];
-        label.frame = NSMakeRect(20, 355, 350, 20);
+        label.frame = NSMakeRect(20, 385, 350, 20);
         
         label;
     });
